@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Agente {
+  id     BigInt @id @default(autoincrement())
+  nombre String @db.VarChar(100)
+  rol    String @db.VarChar(50)
+
+  leads  Lead[]
+}
+
+model Lead {
+  id                BigInt  @id @default(autoincrement())
+  nombre            String  @db.VarChar(150)
+  telefono          String @db.VarChar(30)
+  estado            String  @db.VarChar(20)
+  agenteId          BigInt? @map("agente_id")
+  agente            Agente? @relation(fields: [agenteId], references: [id])
+  clienteNuevo      Int     @map("cliente_nuevo")
+  interesComercial  Int     @map("interes_comercial")
+  origen            Int
+  antiguedad        Int
+
+  puntuaciones Puntuacion[]
+}
+
+model Puntuacion {
+  // Clave primaria compuesta
+  leadId     BigInt  @map("lead_id")
+  version    Int
+  puntuacion Float
+
+  lead       Lead    @relation(fields: [leadId], references: [id])
+  pesos      Pesos   @relation(fields: [version], references: [version])
+
+  @@id([leadId, version])
+}
+
+model Pesos {
+  version           Int     @id
+  activo            Boolean @default(false)
+  clienteNuevo      Int     @map("cliente_nuevo")
+  interesComercial  Int     @map("interes_comercial")
+  origen            Int
+  antiguedad        Int
+
+  puntuaciones      Puntuacion[]
+}
