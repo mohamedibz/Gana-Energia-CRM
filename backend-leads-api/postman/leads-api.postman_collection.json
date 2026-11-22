@@ -1,0 +1,3809 @@
+{
+  "info": {
+    "name": "Gana Energía CRM · Leads API",
+    "description": "Colección de integración de la API de leads.\n\n**Requisitos:** API en marcha (`npm run start:dev`) y datos de ejemplo cargados (`npm run seed`).\n\n**Uso:** ejecuta la colección completa (Runner) o desde terminal con `npm run test:postman`. Las carpetas dependen unas de otras (la 1 guarda los tokens), así que se ejecutan en orden.\n\nLa variable `baseUrl` y las credenciales de demo están en las variables de la colección.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "adminPhone",
+      "value": "600000001"
+    },
+    {
+      "key": "adminPassword",
+      "value": "Admin-2026"
+    },
+    {
+      "key": "agent2Phone",
+      "value": "600000002"
+    },
+    {
+      "key": "agent2Password",
+      "value": "Agente2-2026"
+    },
+    {
+      "key": "agent3Phone",
+      "value": "600000003"
+    },
+    {
+      "key": "agent3Password",
+      "value": "Agente3-2026"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticación",
+      "description": "Login con teléfono y contraseña, token Bearer y rutas protegidas. Esta carpeta guarda los tokens que usa el resto de la colección: ejecútala siempre primero.",
+      "item": [
+        {
+          "name": "Login administrador (200)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('runId', String(Date.now()));",
+                  "pm.collectionVariables.set('leadName', 'PostmanLead' + pm.collectionVariables.get('runId'));",
+                  "pm.collectionVariables.set('leadPhone', '6' + pm.collectionVariables.get('runId').slice(-8));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Devuelve un token y el agente ADMIN', () => {",
+                  "  pm.expect(json.token).to.be.a('string').and.not.empty;",
+                  "  pm.expect(json.agente).to.include({ rol: 'ADMIN' });",
+                  "});",
+                  "pm.test('No expone contraseña, hash ni teléfono', () => {",
+                  "  pm.expect(pm.response.text()).to.not.match(/password|hash|scrypt/i);",
+                  "  pm.expect(json.agente).to.have.all.keys('id', 'nombre', 'rol');",
+                  "});",
+                  "pm.collectionVariables.set('tokenAdmin', json.token);",
+                  "pm.collectionVariables.set('adminId', json.agente.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"{{adminPhone}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login agente 2 (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Devuelve un token y el agente con rol AGENTE', () => {",
+                  "  pm.expect(json.token).to.be.a('string').and.not.empty;",
+                  "  pm.expect(json.agente.rol).to.eql('AGENTE');",
+                  "});",
+                  "pm.collectionVariables.set('tokenAgent2', json.token);",
+                  "pm.collectionVariables.set('agent2Id', json.agente.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"{{agent2Phone}}\",\n  \"password\": \"{{agent2Password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login agente 3 (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Devuelve un token y el agente con rol AGENTE', () => {",
+                  "  pm.expect(json.token).to.be.a('string').and.not.empty;",
+                  "  pm.expect(json.agente.rol).to.eql('AGENTE');",
+                  "});",
+                  "pm.collectionVariables.set('tokenAgent3', json.token);",
+                  "pm.collectionVariables.set('agent3Id', json.agente.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"{{agent3Phone}}\",\n  \"password\": \"{{agent3Password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Contraseña incorrecta (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.collectionVariables.set('loginErrorMessage', pm.response.json().message);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"{{adminPhone}}\",\n  \"password\": \"contraseña-incorrecta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Teléfono inexistente: mismo mensaje que contraseña incorrecta (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('No revela si el teléfono existe', () => {",
+                  "  pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get('loginErrorMessage'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"600999999\",\n  \"password\": \"cualquiera\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login con teléfono no válido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"telefono\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('telefono');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"abc\",\n  \"password\": \"x\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login con campos desconocidos (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"{{adminPhone}}\",\n  \"password\": \"{{adminPassword}}\",\n  \"rol\": \"ADMIN\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Sin token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Token inventado (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token.inventado.falso"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Cabecera antigua X-Agent-Id ya no sirve (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Agent-Id",
+                "value": "1"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Quién soy: /auth/me (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Devuelve el agente de la sesión', () => {",
+                  "  pm.expect(pm.response.json()).to.eql({ id: pm.collectionVariables.get('agent2Id'), nombre: 'Agente 02', rol: 'AGENTE' });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/auth/me"
+          }
+        },
+        {
+          "name": "Lista de agentes sin datos sensibles (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Devuelve los 3 agentes solo con id, nombre y rol', () => {",
+                  "  const agents = pm.response.json();",
+                  "  pm.expect(agents).to.have.lengthOf(3);",
+                  "  agents.forEach((a) => pm.expect(a).to.have.all.keys('id', 'nombre', 'rol'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/agents"
+          }
+        },
+        {
+          "name": "Lista de agentes sin token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{baseUrl}}/agents"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Pesos: validación y permisos",
+      "description": "Un administrador puede consultar y cambiar los pesos; cualquier configuración inválida se rechaza sin tocar la vigente.",
+      "item": [
+        {
+          "name": "Pesos vigentes (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "const values = [json.clienteNuevo, json.interesComercial, json.origen, json.antiguedad];",
+                  "pm.test('Cuatro pesos enteros entre 0 y 100 que suman exactamente 100', () => {",
+                  "  values.forEach((v) => pm.expect(Number.isInteger(v) && v >= 0 && v <= 100).to.be.true);",
+                  "  pm.expect(values.reduce((a, b) => a + b, 0)).to.eql(100);",
+                  "});",
+                  "pm.collectionVariables.set('originalWeights', JSON.stringify({",
+                  "  clienteNuevo: json.clienteNuevo, interesComercial: json.interesComercial, origen: json.origen, antiguedad: json.antiguedad,",
+                  "}));",
+                  "pm.collectionVariables.set('originalWeightsVersion', String(json.version));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Un agente no puede cambiar los pesos (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 403', () => pm.response.to.have.status(403));",
+                  "pm.test('Formato de error uniforme (FORBIDDEN)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(403);",
+                  "  pm.expect(e.error).to.eql('FORBIDDEN');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 25,\n  \"interesComercial\": 25,\n  \"origen\": 25,\n  \"antiguedad\": 25\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Cambiar pesos sin token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 25,\n  \"interesComercial\": 25,\n  \"origen\": 25,\n  \"antiguedad\": 25\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "La suma no es 100 (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('El mensaje explica que la suma debe ser 100', () => {",
+                  "  pm.expect(JSON.stringify(pm.response.json().details)).to.include('100');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 40,\n  \"interesComercial\": 30,\n  \"origen\": 20,\n  \"antiguedad\": 9\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Peso negativo (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"clienteNuevo\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('clienteNuevo');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": -10,\n  \"interesComercial\": 60,\n  \"origen\": 30,\n  \"antiguedad\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Peso decimal (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 40.5,\n  \"interesComercial\": 29.5,\n  \"origen\": 20,\n  \"antiguedad\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Peso mayor que 100 (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 101,\n  \"interesComercial\": 0,\n  \"origen\": 0,\n  \"antiguedad\": -1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Falta un criterio (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"antiguedad\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('antiguedad');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 50,\n  \"interesComercial\": 30,\n  \"origen\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Criterio duplicado o desconocido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 40,\n  \"interesComercial\": 30,\n  \"origen\": 20,\n  \"antiguedad\": 10,\n  \"origen2\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Tras los intentos inválidos, los pesos siguen igual (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Misma configuración y misma versión', () => {",
+                  "  const json = pm.response.json();",
+                  "  const original = JSON.parse(pm.collectionVariables.get('originalWeights'));",
+                  "  pm.expect(json).to.include(original);",
+                  "  pm.expect(String(json.version)).to.eql(pm.collectionVariables.get('originalWeightsVersion'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Leads: crear, consultar y modificar",
+      "description": "Validación de datos, puntuación calculada por el servidor, desglose y control de conflictos con la versión.",
+      "item": [
+        {
+          "name": "Crear lead (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 201', () => pm.response.to.have.status(201));",
+                  "const w = JSON.parse(pm.collectionVariables.get('originalWeights'));",
+                  "const score = (l, w) => (l.clienteNuevo * w.clienteNuevo + l.interesComercial * w.interesComercial + l.origen * w.origen + l.antiguedad * w.antiguedad) / 100;",
+                  "const priority = (p) => (p >= 75 ? 'ALTA' : p >= 40 ? 'MEDIA' : 'BAJA');",
+                  "const lead = pm.response.json();",
+                  "pm.test('Nace con estado NUEVO, sin agente y versión 1', () => {",
+                  "  pm.expect(lead).to.include({ estado: 'NUEVO', agenteId: null, version: 1 });",
+                  "  pm.expect(lead.id).to.be.a('string');",
+                  "});",
+                  "pm.test('La puntuación la calcula el servidor con los pesos vigentes', () => {",
+                  "  pm.expect(lead.puntuacion).to.eql(score(lead, w));",
+                  "  pm.expect(String(lead.pesosVersion)).to.eql(pm.collectionVariables.get('originalWeightsVersion'));",
+                  "});",
+                  "pm.test('La prioridad es coherente con la puntuación', () => pm.expect(lead.prioridad).to.eql(priority(lead.puntuacion)));",
+                  "pm.collectionVariables.set('leadId', lead.id);",
+                  "pm.collectionVariables.set('leadVersion', String(lead.version));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "No se acepta una puntuación enviada por el cliente (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0,\n  \"puntuacion\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "No se acepta el estado ni el agente en la creación (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0,\n  \"estado\": \"CERRADO\",\n  \"agenteId\": \"1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Indicador fuera de rango (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"clienteNuevo\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('clienteNuevo');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 101,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Indicador decimal (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"origen\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('origen');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 10.5,\n  \"antiguedad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Faltan indicadores: no se asumen valores por defecto (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details lista todos los indicadores que faltan', () => {",
+                  "  const campos = pm.response.json().details.map((d) => d.campo);",
+                  "  pm.expect(campos).to.include.members(['clienteNuevo', 'interesComercial', 'origen', 'antiguedad']);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sin datos\",\n  \"telefono\": \"600123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Teléfono no válido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"telefono\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('telefono');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"no-es-un-telefono\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Nombre vacío o solo espacios (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"nombre\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('nombre');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"   \",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Crear sin token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Detalle con puntuación, prioridad y desglose (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const w = JSON.parse(pm.collectionVariables.get('originalWeights'));",
+                  "const score = (l, w) => (l.clienteNuevo * w.clienteNuevo + l.interesComercial * w.interesComercial + l.origen * w.origen + l.antiguedad * w.antiguedad) / 100;",
+                  "const priority = (p) => (p >= 75 ? 'ALTA' : p >= 40 ? 'MEDIA' : 'BAJA');",
+                  "const lead = pm.response.json();",
+                  "pm.test('El desglose tiene los 4 criterios con los pesos vigentes', () => {",
+                  "  pm.expect(lead.desglose.map((d) => d.criterio)).to.eql(['Cliente nuevo', 'Interés comercial', 'Origen del lead', 'Antigüedad']);",
+                  "  pm.expect(lead.desglose.map((d) => d.peso)).to.eql([w.clienteNuevo, w.interesComercial, w.origen, w.antiguedad]);",
+                  "});",
+                  "pm.test('Los aportes del desglose suman la puntuación mostrada', () => {",
+                  "  const total = lead.desglose.reduce((sum, d) => sum + d.aporte, 0);",
+                  "  pm.expect(total).to.be.closeTo(lead.puntuacion, 1e-9);",
+                  "});",
+                  "pm.test('Cada aporte es valoración × peso / 100', () => {",
+                  "  lead.desglose.forEach((d) => pm.expect(d.aporte).to.be.closeTo((d.valoracion * d.peso) / 100, 1e-9));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Lead inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Formato de error uniforme (NOT_FOUND)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(404);",
+                  "  pm.expect(e.error).to.eql('NOT_FOUND');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/999999999"
+          }
+        },
+        {
+          "name": "Identificador no válido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/abc"
+          }
+        },
+        {
+          "name": "Un lead sin asignar no se puede modificar (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 403', () => pm.response.to.have.status(403));",
+                  "pm.test('Formato de error uniforme (FORBIDDEN)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.error).to.eql('FORBIDDEN');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}} editado\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 100,\n  \"version\": {{leadVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Un lead sin asignar no admite cambio de estado (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"EN_GESTION\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/status"
+          }
+        },
+        {
+          "name": "El agente 2 se asigna el lead para poder modificarlo (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('El lead queda asignado al agente autenticado', () => {",
+                  "  pm.expect(pm.response.json().agenteId).to.eql(pm.collectionVariables.get('agent2Id'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "Otro agente no puede modificar el lead asignado (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 403', () => pm.response.to.have.status(403));",
+                  "pm.test('Formato de error uniforme (FORBIDDEN)', () => pm.expect(pm.response.json().error).to.eql('FORBIDDEN'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent3}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Intento de otro agente\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0,\n  \"version\": {{leadVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Ni siquiera un administrador puede modificar el lead de otro agente (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"CERRADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/status"
+          }
+        },
+        {
+          "name": "Modificar con la versión correcta (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const w = JSON.parse(pm.collectionVariables.get('originalWeights'));",
+                  "const score = (l, w) => (l.clienteNuevo * w.clienteNuevo + l.interesComercial * w.interesComercial + l.origen * w.origen + l.antiguedad * w.antiguedad) / 100;",
+                  "const priority = (p) => (p >= 75 ? 'ALTA' : p >= 40 ? 'MEDIA' : 'BAJA');",
+                  "const lead = pm.response.json();",
+                  "pm.test('La versión sube a 2 y se conservan el estado y el agente asignado', () => {",
+                  "  pm.expect(lead).to.include({ version: 2, estado: 'NUEVO', agenteId: pm.collectionVariables.get('agent2Id') });",
+                  "  pm.expect(lead.nombre).to.eql(pm.collectionVariables.get('leadName') + ' editado');",
+                  "});",
+                  "pm.test('La puntuación se recalcula con los nuevos datos', () => pm.expect(lead.puntuacion).to.eql(score(lead, w)));",
+                  "pm.collectionVariables.set('leadVersion', String(lead.version));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}} editado\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 100,\n  \"version\": {{leadVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Conflicto: modificar con una versión desactualizada (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Formato de error uniforme (CONFLICT)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(409);",
+                  "  pm.expect(e.error).to.eql('CONFLICT');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Edición con datos antiguos\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0,\n  \"version\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "El conflicto no ha modificado el lead (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Sigue con la edición anterior y versión 2', () => {",
+                  "  const lead = pm.response.json();",
+                  "  pm.expect(lead.version).to.eql(2);",
+                  "  pm.expect(lead.nombre).to.eql(pm.collectionVariables.get('leadName') + ' editado');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Modificar sin indicar la versión (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"version\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('version');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Modificar un lead inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Formato de error uniforme (NOT_FOUND)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(404);",
+                  "  pm.expect(e.error).to.eql('NOT_FOUND');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}\",\n  \"telefono\": \"{{leadPhone}}\",\n  \"clienteNuevo\": 100,\n  \"interesComercial\": 50,\n  \"origen\": 20,\n  \"antiguedad\": 0,\n  \"version\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/999999999"
+          }
+        },
+        {
+          "name": "Cambiar estado a EN_GESTION (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Cambia el estado sin alterar la versión de edición', () => {",
+                  "  const lead = pm.response.json();",
+                  "  pm.expect(lead.estado).to.eql('EN_GESTION');",
+                  "  pm.expect(String(lead.version)).to.eql(pm.collectionVariables.get('leadVersion'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"EN_GESTION\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/status"
+          }
+        },
+        {
+          "name": "Estado no válido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"PERDIDO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/status"
+          }
+        },
+        {
+          "name": "Cambiar estado de un lead inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Formato de error uniforme (NOT_FOUND)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(404);",
+                  "  pm.expect(e.error).to.eql('NOT_FOUND');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"CERRADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/999999999/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Asignación de leads",
+      "description": "Un lead solo puede tener un agente. La carrera simultánea real se prueba en los tests de integración de Vitest (test/leads.e2e-spec.ts); aquí se comprueban las reglas de forma secuencial.",
+      "item": [
+        {
+          "name": "El agente 2 ya lo tiene asignado (en la carpeta 3): no puede asignárselo otra vez (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Sigue asignado al agente 2', () => pm.expect(pm.response.json().error).to.eql('CONFLICT'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "El agente 3 intenta asignárselo: ya está ocupado (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Formato de error uniforme (CONFLICT)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(409);",
+                  "  pm.expect(e.error).to.eql('CONFLICT');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent3}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "El agente 3 no puede desasignar un lead ajeno (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 403', () => pm.response.to.have.status(403));",
+                  "pm.test('Formato de error uniforme (FORBIDDEN)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(403);",
+                  "  pm.expect(e.error).to.eql('FORBIDDEN');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent3}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "El lead sigue asignado al agente 2 (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Un solo agente asignado', () => pm.expect(pm.response.json().agenteId).to.eql(pm.collectionVariables.get('agent2Id')));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent3}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Asignar un lead inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Formato de error uniforme (NOT_FOUND)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(404);",
+                  "  pm.expect(e.error).to.eql('NOT_FOUND');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/999999999/assign"
+          }
+        },
+        {
+          "name": "Asignar sin token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Formato de error uniforme (UNAUTHORIZED)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(401);",
+                  "  pm.expect(e.error).to.eql('UNAUTHORIZED');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "El agente asignado lo desasigna (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('El lead queda sin agente', () => pm.expect(pm.response.json().agenteId).to.be.null);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "Desasignar un lead que no tiene agente (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Formato de error uniforme (CONFLICT)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(409);",
+                  "  pm.expect(e.error).to.eql('CONFLICT');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "Reasignación: el agente 3 se lo asigna (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Asignado al agente 3', () => pm.expect(pm.response.json().agenteId).to.eql(pm.collectionVariables.get('agent3Id')));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent3}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "Un administrador puede desasignar el lead de otro agente (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('El lead queda sin agente', () => pm.expect(pm.response.json().agenteId).to.be.null);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        },
+        {
+          "name": "Dejar el lead asignado al agente 2 para los filtros (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}/assign"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Listado: filtros, búsqueda, orden y paginación",
+      "description": "Requiere los datos de ejemplo (npm run seed): 500 leads repartidos entre los agentes.",
+      "item": [
+        {
+          "name": "Listado por defecto (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Paginación por defecto: página 1, 20 resultados y total del conjunto', () => {",
+                  "  pm.expect(json).to.include({ page: 1, limit: 20 });",
+                  "  pm.expect(json.items.length).to.be.at.most(20);",
+                  "  pm.expect(json.total).to.be.at.least(500);",
+                  "});",
+                  "pm.test('Cada lead trae puntuación, prioridad y versión de pesos', () => {",
+                  "  json.items.forEach((l) => {",
+                  "    pm.expect(l.puntuacion).to.be.within(0, 100);",
+                  "    pm.expect(l.prioridad).to.be.oneOf(['ALTA', 'MEDIA', 'BAJA']);",
+                  "    pm.expect(l.pesosVersion).to.be.a('number');",
+                  "  });",
+                  "});",
+                  "pm.test('Todos los leads usan la misma versión de pesos', () => {",
+                  "  pm.expect(new Set(json.items.map((l) => l.pesosVersion)).size).to.eql(1);",
+                  "});",
+                  "pm.test('Orden por puntuación descendente y, en empates, por id ascendente', () => {",
+                  "  const items = pm.response.json().items;",
+                  "  for (let i = 1; i < items.length; i++) {",
+                  "    const [a, b] = [items[i - 1], items[i]];",
+                  "    const ordered = a.puntuacion > b.puntuacion || (a.puntuacion === b.puntuacion && Number(a.id) < Number(b.id));",
+                  "    pm.expect(ordered, 'posición ' + i).to.be.true;",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Página 1 de 5 resultados (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Devuelve 5 resultados', () => pm.expect(json.items).to.have.lengthOf(5));",
+                  "pm.collectionVariables.set('page1Ids', JSON.stringify(json.items.map((l) => l.id)));",
+                  "pm.collectionVariables.set('page1LastScore', String(json.items[4].puntuacion));",
+                  "pm.collectionVariables.set('totalLeads', String(json.total));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?page=1&limit=5"
+          }
+        },
+        {
+          "name": "Página 2 de 5 resultados: continúa sin repetir (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('No se repite ningún lead de la página 1', () => {",
+                  "  const page1 = JSON.parse(pm.collectionVariables.get('page1Ids'));",
+                  "  json.items.forEach((l) => pm.expect(page1).to.not.include(l.id));",
+                  "});",
+                  "pm.test('El orden continúa donde acabó la página 1', () => {",
+                  "  pm.expect(json.items[0].puntuacion).to.be.at.most(Number(pm.collectionVariables.get('page1LastScore')));",
+                  "});",
+                  "pm.test('El total es el mismo en todas las páginas', () => pm.expect(String(json.total)).to.eql(pm.collectionVariables.get('totalLeads')));",
+                  "pm.test('Orden por puntuación descendente y, en empates, por id ascendente', () => {",
+                  "  const items = pm.response.json().items;",
+                  "  for (let i = 1; i < items.length; i++) {",
+                  "    const [a, b] = [items[i - 1], items[i]];",
+                  "    const ordered = a.puntuacion > b.puntuacion || (a.puntuacion === b.puntuacion && Number(a.id) < Number(b.id));",
+                  "    pm.expect(ordered, 'posición ' + i).to.be.true;",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?page=2&limit=5"
+          }
+        },
+        {
+          "name": "Ordenar por puntuación ascendente (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Orden por puntuación ascendente y, en empates, por id ascendente', () => {",
+                  "  const items = pm.response.json().items;",
+                  "  for (let i = 1; i < items.length; i++) {",
+                  "    const [a, b] = [items[i - 1], items[i]];",
+                  "    const ordered = a.puntuacion < b.puntuacion || (a.puntuacion === b.puntuacion && Number(a.id) < Number(b.id));",
+                  "    pm.expect(ordered, 'posición ' + i).to.be.true;",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?sort=asc&limit=50"
+          }
+        },
+        {
+          "name": "Filtrar por estado (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Todos los leads están en estado NUEVO', () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.items.length).to.be.above(0);",
+                  "  json.items.forEach((l) => pm.expect(l.estado).to.eql('NUEVO'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?status=NUEVO&limit=100"
+          }
+        },
+        {
+          "name": "Filtrar por agente (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Todos los leads son del agente 2 y está el lead de la prueba', () => {",
+                  "  const json = pm.response.json();",
+                  "  json.items.forEach((l) => pm.expect(l.agenteId).to.eql(pm.collectionVariables.get('agent2Id')));",
+                  "  pm.expect(json.items.map((l) => l.id)).to.include(pm.collectionVariables.get('leadId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?agentId={{agent2Id}}&search={{runId}}"
+          }
+        },
+        {
+          "name": "Filtrar por agente distinto: el lead no aparece (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('El lead del agente 2 no sale en el listado del agente 3', () => pm.expect(pm.response.json().total).to.eql(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?agentId={{agent3Id}}&search={{runId}}"
+          }
+        },
+        {
+          "name": "Filtros combinados: estado + agente + búsqueda + orden (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Cumple todos los filtros', () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.items.map((l) => l.id)).to.include(pm.collectionVariables.get('leadId'));",
+                  "  json.items.forEach((l) => {",
+                  "    pm.expect(l.estado).to.eql('EN_GESTION');",
+                  "    pm.expect(l.agenteId).to.eql(pm.collectionVariables.get('agent2Id'));",
+                  "  });",
+                  "});",
+                  "pm.test('Orden por puntuación ascendente y, en empates, por id ascendente', () => {",
+                  "  const items = pm.response.json().items;",
+                  "  for (let i = 1; i < items.length; i++) {",
+                  "    const [a, b] = [items[i - 1], items[i]];",
+                  "    const ordered = a.puntuacion < b.puntuacion || (a.puntuacion === b.puntuacion && Number(a.id) < Number(b.id));",
+                  "    pm.expect(ordered, 'posición ' + i).to.be.true;",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?status=EN_GESTION&agentId={{agent2Id}}&search={{runId}}&sort=asc"
+          }
+        },
+        {
+          "name": "Buscar por nombre (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Encuentra el lead creado en esta ejecución', () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.total).to.eql(1);",
+                  "  pm.expect(json.items[0].id).to.eql(pm.collectionVariables.get('leadId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?search={{runId}}"
+          }
+        },
+        {
+          "name": "Buscar por teléfono (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Encuentra el lead por su teléfono', () => {",
+                  "  pm.expect(pm.response.json().items.map((l) => l.id)).to.include(pm.collectionVariables.get('leadId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?search={{leadPhone}}"
+          }
+        },
+        {
+          "name": "Búsqueda sin resultados (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Lista vacía con total 0', () => pm.expect(pm.response.json()).to.deep.include({ items: [], total: 0 }));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?search=zzzzzzzz"
+          }
+        },
+        {
+          "name": "Página más allá del final (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Lista vacía pero con el total correcto', () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.items).to.be.empty;",
+                  "  pm.expect(json.total).to.be.at.least(500);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?page=99999&limit=100"
+          }
+        },
+        {
+          "name": "limit superior al máximo (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"limit\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('limit');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?limit=101"
+          }
+        },
+        {
+          "name": "page inferior a 1 (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('details indica el campo \"page\"', () => {",
+                  "  pm.expect(pm.response.json().details.map((d) => d.campo)).to.include('page');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?page=0"
+          }
+        },
+        {
+          "name": "Estado de filtro no válido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?status=PERDIDO"
+          }
+        },
+        {
+          "name": "Agente de filtro no válido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?agentId=abc"
+          }
+        },
+        {
+          "name": "Parámetro desconocido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?orden=score"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Cambio de pesos y consistencia de puntuaciones",
+      "description": "Cambia los pesos y comprueba que puntuaciones, desglose y orden son coherentes con la configuración vigente. Al final restaura los pesos originales (si la ejecución se interrumpe, `npm run seed` los restablece).",
+      "item": [
+        {
+          "name": "El administrador cambia los pesos: solo cuenta la antigüedad (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Crea una nueva versión de pesos', () => {",
+                  "  pm.expect(json).to.include({ clienteNuevo: 0, interesComercial: 0, origen: 0, antiguedad: 100 });",
+                  "  pm.expect(json.version).to.be.above(Number(pm.collectionVariables.get('originalWeightsVersion')));",
+                  "});",
+                  "pm.collectionVariables.set('newWeightsVersion', String(json.version));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteNuevo\": 0,\n  \"interesComercial\": 0,\n  \"origen\": 0,\n  \"antiguedad\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "GET /weights refleja la nueva configuración (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Pesos vigentes = nueva versión', () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.include({ antiguedad: 100, clienteNuevo: 0 });",
+                  "  pm.expect(String(json.version)).to.eql(pm.collectionVariables.get('newWeightsVersion'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "El detalle del lead usa los nuevos pesos (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const lead = pm.response.json();",
+                  "pm.test('La puntuación pasa a ser su valoración de antigüedad (100)', () => {",
+                  "  pm.expect(lead.puntuacion).to.eql(lead.antiguedad);",
+                  "  pm.expect(lead.prioridad).to.eql('ALTA');",
+                  "  pm.expect(String(lead.pesosVersion)).to.eql(pm.collectionVariables.get('newWeightsVersion'));",
+                  "});",
+                  "pm.test('El desglose usa los nuevos pesos y suma la puntuación', () => {",
+                  "  pm.expect(lead.desglose.map((d) => d.peso)).to.eql([0, 0, 0, 100]);",
+                  "  pm.expect(lead.desglose.reduce((s, d) => s + d.aporte, 0)).to.be.closeTo(lead.puntuacion, 1e-9);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        },
+        {
+          "name": "Todo el listado es coherente con la nueva configuración (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Todos los leads usan la nueva versión y puntúan según su antigüedad', () => {",
+                  "  json.items.forEach((l) => {",
+                  "    pm.expect(String(l.pesosVersion)).to.eql(pm.collectionVariables.get('newWeightsVersion'));",
+                  "    pm.expect(l.puntuacion).to.eql(l.antiguedad);",
+                  "  });",
+                  "});",
+                  "pm.test('Orden por puntuación descendente y, en empates, por id ascendente', () => {",
+                  "  const items = pm.response.json().items;",
+                  "  for (let i = 1; i < items.length; i++) {",
+                  "    const [a, b] = [items[i - 1], items[i]];",
+                  "    const ordered = a.puntuacion > b.puntuacion || (a.puntuacion === b.puntuacion && Number(a.id) < Number(b.id));",
+                  "    pm.expect(ordered, 'posición ' + i).to.be.true;",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent3}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?limit=100"
+          }
+        },
+        {
+          "name": "Un lead nuevo nace puntuado con los pesos vigentes (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 201', () => pm.response.to.have.status(201));",
+                  "const lead = pm.response.json();",
+                  "pm.test('Puntuación 80 con la versión de pesos vigente', () => {",
+                  "  pm.expect(lead.puntuacion).to.eql(80);",
+                  "  pm.expect(String(lead.pesosVersion)).to.eql(pm.collectionVariables.get('newWeightsVersion'));",
+                  "});",
+                  "pm.test('Con asignarme: true nace asignado al agente que lo crea', () => pm.expect(lead.agenteId).to.eql(pm.collectionVariables.get('agent2Id')));",
+                  "pm.collectionVariables.set('lead2Id', lead.id);",
+                  "pm.collectionVariables.set('lead2Version', String(lead.version));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}-nuevo\",\n  \"telefono\": \"600123457\",\n  \"clienteNuevo\": 10,\n  \"interesComercial\": 10,\n  \"origen\": 10,\n  \"antiguedad\": 80,\n  \"asignarme\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Modificar un lead recalcula con los pesos vigentes (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Puntuación 20 con la versión de pesos vigente', () => {",
+                  "  const lead = pm.response.json();",
+                  "  pm.expect(lead.puntuacion).to.eql(20);",
+                  "  pm.expect(String(lead.pesosVersion)).to.eql(pm.collectionVariables.get('newWeightsVersion'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{leadName}}-nuevo\",\n  \"telefono\": \"600123457\",\n  \"clienteNuevo\": 10,\n  \"interesComercial\": 10,\n  \"origen\": 10,\n  \"antiguedad\": 20,\n  \"version\": {{lead2Version}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads/{{lead2Id}}"
+          }
+        },
+        {
+          "name": "Restaurar los pesos originales (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Vuelven los pesos originales con una versión nueva', () => {",
+                  "  pm.expect(json).to.include(JSON.parse(pm.collectionVariables.get('originalWeights')));",
+                  "  pm.expect(json.version).to.be.above(Number(pm.collectionVariables.get('newWeightsVersion')));",
+                  "});",
+                  "pm.collectionVariables.set('restoredWeightsVersion', String(json.version));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{{originalWeights}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/weights"
+          }
+        },
+        {
+          "name": "Tras restaurar, cada puntuación coincide con la fórmula (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const w = JSON.parse(pm.collectionVariables.get('originalWeights'));",
+                  "const score = (l, w) => (l.clienteNuevo * w.clienteNuevo + l.interesComercial * w.interesComercial + l.origen * w.origen + l.antiguedad * w.antiguedad) / 100;",
+                  "const priority = (p) => (p >= 75 ? 'ALTA' : p >= 40 ? 'MEDIA' : 'BAJA');",
+                  "const json = pm.response.json();",
+                  "pm.test('puntuación = Σ valoración × peso / 100 para cada lead', () => {",
+                  "  json.items.forEach((l) => {",
+                  "    pm.expect(String(l.pesosVersion)).to.eql(pm.collectionVariables.get('restoredWeightsVersion'));",
+                  "    pm.expect(l.puntuacion).to.eql(score(l, w));",
+                  "    pm.expect(l.prioridad).to.eql(priority(l.puntuacion));",
+                  "  });",
+                  "});",
+                  "pm.test('Orden por puntuación descendente y, en empates, por id ascendente', () => {",
+                  "  const items = pm.response.json().items;",
+                  "  for (let i = 1; i < items.length; i++) {",
+                  "    const [a, b] = [items[i - 1], items[i]];",
+                  "    const ordered = a.puntuacion > b.puntuacion || (a.puntuacion === b.puntuacion && Number(a.id) < Number(b.id));",
+                  "    pm.expect(ordered, 'posición ' + i).to.be.true;",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads?limit=100"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Errores de la API",
+      "description": "Todos los errores salen con el mismo formato y sin información interna.",
+      "item": [
+        {
+          "name": "Ruta inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Formato de error uniforme (NOT_FOUND)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(404);",
+                  "  pm.expect(e.error).to.eql('NOT_FOUND');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('Mensaje propio en español', () => pm.expect(pm.response.json().message).to.eql('Ruta no encontrada'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/ruta-que-no-existe"
+          }
+        },
+        {
+          "name": "JSON mal formado (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Formato de error uniforme (VALIDATION)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(400);",
+                  "  pm.expect(e.error).to.eql('VALIDATION');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});",
+                  "pm.test('No expone el mensaje interno del parser', () => pm.expect(pm.response.json().message).to.not.match(/position|Unexpected|JSON/i));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAgent2}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{ esto no es json",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/leads"
+          }
+        },
+        {
+          "name": "Borrar un lead no es una operación disponible (404)",
+          "description": "No existe un endpoint para borrar leads.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Formato de error uniforme (NOT_FOUND)', () => {",
+                  "  const e = pm.response.json();",
+                  "  pm.expect(e).to.have.all.keys('statusCode', 'error', 'message', 'details', 'path', 'timestamp');",
+                  "  pm.expect(e.statusCode).to.eql(404);",
+                  "  pm.expect(e.error).to.eql('NOT_FOUND');",
+                  "  pm.expect(e.message).to.be.a('string').and.not.empty;",
+                  "  pm.expect(e.details).to.be.an('array');",
+                  "  pm.expect(pm.response.text()).to.not.match(/node_modules|\\.ts:\\d+|stack/i);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/leads/{{leadId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

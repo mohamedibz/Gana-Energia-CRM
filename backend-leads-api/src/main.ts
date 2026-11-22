@@ -1,11 +1,12 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule, ObserveInstrument } from './app.module.js';
-import 'dotenv/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     instrument: ObserveInstrument,
   });
+  app.enableCors({ origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173' });
   await app.listen(process.env.PORT ?? 3000);
 }
 await bootstrap();

@@ -1,0 +1,6 @@
+export enum LeadStatus {
+  NUEVO = 'NUEVO',
+  EN_GESTION = 'EN_GESTION',
+  CONTACTADO = 'CONTACTADO',
+  CERRADO = 'CERRADO',
+}

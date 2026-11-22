@@ -38,18 +38,24 @@ export type AgenteMinAggregateOutputType = {
   id: bigint | null
   nombre: string | null
   rol: string | null
+  telefono: string | null
+  passwordHash: string | null
 }
 
 export type AgenteMaxAggregateOutputType = {
   id: bigint | null
   nombre: string | null
   rol: string | null
+  telefono: string | null
+  passwordHash: string | null
 }
 
 export type AgenteCountAggregateOutputType = {
   id: number
   nombre: number
   rol: number
+  telefono: number
+  passwordHash: number
   _all: number
 }
 
@@ -66,18 +72,24 @@ export type AgenteMinAggregateInputType = {
   id?: true
   nombre?: true
   rol?: true
+  telefono?: true
+  passwordHash?: true
 }
 
 export type AgenteMaxAggregateInputType = {
   id?: true
   nombre?: true
   rol?: true
+  telefono?: true
+  passwordHash?: true
 }
 
 export type AgenteCountAggregateInputType = {
   id?: true
   nombre?: true
   rol?: true
+  telefono?: true
+  passwordHash?: true
   _all?: true
 }
 
@@ -171,6 +183,8 @@ export type AgenteGroupByOutputType = {
   id: bigint
   nombre: string
   rol: string
+  telefono: string
+  passwordHash: string
   _count: AgenteCountAggregateOutputType | null
   _avg: AgenteAvgAggregateOutputType | null
   _sum: AgenteSumAggregateOutputType | null
@@ -200,30 +214,44 @@ export type AgenteWhereInput = {
   id?: Prisma.BigIntFilter<"Agente"> | bigint | number
   nombre?: Prisma.StringFilter<"Agente"> | string
   rol?: Prisma.StringFilter<"Agente"> | string
+  telefono?: Prisma.StringFilter<"Agente"> | string
+  passwordHash?: Prisma.StringFilter<"Agente"> | string
   leads?: Prisma.LeadListRelationFilter
+  pesosCreados?: Prisma.PesosListRelationFilter
+  pesosModificados?: Prisma.PesosListRelationFilter
 }
 
 export type AgenteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   rol?: Prisma.SortOrder
+  telefono?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   leads?: Prisma.LeadOrderByRelationAggregateInput
+  pesosCreados?: Prisma.PesosOrderByRelationAggregateInput
+  pesosModificados?: Prisma.PesosOrderByRelationAggregateInput
 }
 
 export type AgenteWhereUniqueInput = Prisma.AtLeast<{
   id?: bigint | number
+  telefono?: string
   AND?: Prisma.AgenteWhereInput | Prisma.AgenteWhereInput[]
   OR?: Prisma.AgenteWhereInput[]
   NOT?: Prisma.AgenteWhereInput | Prisma.AgenteWhereInput[]
   nombre?: Prisma.StringFilter<"Agente"> | string
   rol?: Prisma.StringFilter<"Agente"> | string
+  passwordHash?: Prisma.StringFilter<"Agente"> | string
   leads?: Prisma.LeadListRelationFilter
-}, "id">
+  pesosCreados?: Prisma.PesosListRelationFilter
+  pesosModificados?: Prisma.PesosListRelationFilter
+}, "id" | "telefono">
 
 export type AgenteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   rol?: Prisma.SortOrder
+  telefono?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   _count?: Prisma.AgenteCountOrderByAggregateInput
   _avg?: Prisma.AgenteAvgOrderByAggregateInput
   _max?: Prisma.AgenteMaxOrderByAggregateInput
@@ -238,58 +266,84 @@ export type AgenteScalarWhereWithAggregatesInput = {
   id?: Prisma.BigIntWithAggregatesFilter<"Agente"> | bigint | number
   nombre?: Prisma.StringWithAggregatesFilter<"Agente"> | string
   rol?: Prisma.StringWithAggregatesFilter<"Agente"> | string
+  telefono?: Prisma.StringWithAggregatesFilter<"Agente"> | string
+  passwordHash?: Prisma.StringWithAggregatesFilter<"Agente"> | string
 }
 
 export type AgenteCreateInput = {
   id?: bigint | number
   nombre: string
   rol: string
+  telefono: string
+  passwordHash: string
   leads?: Prisma.LeadCreateNestedManyWithoutAgenteInput
+  pesosCreados?: Prisma.PesosCreateNestedManyWithoutCreadoPorInput
+  pesosModificados?: Prisma.PesosCreateNestedManyWithoutModificadoPorInput
 }
 
 export type AgenteUncheckedCreateInput = {
   id?: bigint | number
   nombre: string
   rol: string
+  telefono: string
+  passwordHash: string
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutAgenteInput
+  pesosCreados?: Prisma.PesosUncheckedCreateNestedManyWithoutCreadoPorInput
+  pesosModificados?: Prisma.PesosUncheckedCreateNestedManyWithoutModificadoPorInput
 }
 
 export type AgenteUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   leads?: Prisma.LeadUpdateManyWithoutAgenteNestedInput
+  pesosCreados?: Prisma.PesosUpdateManyWithoutCreadoPorNestedInput
+  pesosModificados?: Prisma.PesosUpdateManyWithoutModificadoPorNestedInput
 }
 
 export type AgenteUncheckedUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   leads?: Prisma.LeadUncheckedUpdateManyWithoutAgenteNestedInput
+  pesosCreados?: Prisma.PesosUncheckedUpdateManyWithoutCreadoPorNestedInput
+  pesosModificados?: Prisma.PesosUncheckedUpdateManyWithoutModificadoPorNestedInput
 }
 
 export type AgenteCreateManyInput = {
   id?: bigint | number
   nombre: string
   rol: string
+  telefono: string
+  passwordHash: string
 }
 
 export type AgenteUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type AgenteUncheckedUpdateManyInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type AgenteCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   rol?: Prisma.SortOrder
+  telefono?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
 }
 
 export type AgenteAvgOrderByAggregateInput = {
@@ -300,12 +354,16 @@ export type AgenteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   rol?: Prisma.SortOrder
+  telefono?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
 }
 
 export type AgenteMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
   rol?: Prisma.SortOrder
+  telefono?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
 }
 
 export type AgenteSumOrderByAggregateInput = {
@@ -345,16 +403,56 @@ export type AgenteUpdateOneWithoutLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AgenteUpdateToOneWithWhereWithoutLeadsInput, Prisma.AgenteUpdateWithoutLeadsInput>, Prisma.AgenteUncheckedUpdateWithoutLeadsInput>
 }
 
+export type AgenteCreateNestedOneWithoutPesosCreadosInput = {
+  create?: Prisma.XOR<Prisma.AgenteCreateWithoutPesosCreadosInput, Prisma.AgenteUncheckedCreateWithoutPesosCreadosInput>
+  connectOrCreate?: Prisma.AgenteCreateOrConnectWithoutPesosCreadosInput
+  connect?: Prisma.AgenteWhereUniqueInput
+}
+
+export type AgenteCreateNestedOneWithoutPesosModificadosInput = {
+  create?: Prisma.XOR<Prisma.AgenteCreateWithoutPesosModificadosInput, Prisma.AgenteUncheckedCreateWithoutPesosModificadosInput>
+  connectOrCreate?: Prisma.AgenteCreateOrConnectWithoutPesosModificadosInput
+  connect?: Prisma.AgenteWhereUniqueInput
+}
+
+export type AgenteUpdateOneWithoutPesosCreadosNestedInput = {
+  create?: Prisma.XOR<Prisma.AgenteCreateWithoutPesosCreadosInput, Prisma.AgenteUncheckedCreateWithoutPesosCreadosInput>
+  connectOrCreate?: Prisma.AgenteCreateOrConnectWithoutPesosCreadosInput
+  upsert?: Prisma.AgenteUpsertWithoutPesosCreadosInput
+  disconnect?: Prisma.AgenteWhereInput | boolean
+  delete?: Prisma.AgenteWhereInput | boolean
+  connect?: Prisma.AgenteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgenteUpdateToOneWithWhereWithoutPesosCreadosInput, Prisma.AgenteUpdateWithoutPesosCreadosInput>, Prisma.AgenteUncheckedUpdateWithoutPesosCreadosInput>
+}
+
+export type AgenteUpdateOneWithoutPesosModificadosNestedInput = {
+  create?: Prisma.XOR<Prisma.AgenteCreateWithoutPesosModificadosInput, Prisma.AgenteUncheckedCreateWithoutPesosModificadosInput>
+  connectOrCreate?: Prisma.AgenteCreateOrConnectWithoutPesosModificadosInput
+  upsert?: Prisma.AgenteUpsertWithoutPesosModificadosInput
+  disconnect?: Prisma.AgenteWhereInput | boolean
+  delete?: Prisma.AgenteWhereInput | boolean
+  connect?: Prisma.AgenteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgenteUpdateToOneWithWhereWithoutPesosModificadosInput, Prisma.AgenteUpdateWithoutPesosModificadosInput>, Prisma.AgenteUncheckedUpdateWithoutPesosModificadosInput>
+}
+
 export type AgenteCreateWithoutLeadsInput = {
   id?: bigint | number
   nombre: string
   rol: string
+  telefono: string
+  passwordHash: string
+  pesosCreados?: Prisma.PesosCreateNestedManyWithoutCreadoPorInput
+  pesosModificados?: Prisma.PesosCreateNestedManyWithoutModificadoPorInput
 }
 
 export type AgenteUncheckedCreateWithoutLeadsInput = {
   id?: bigint | number
   nombre: string
   rol: string
+  telefono: string
+  passwordHash: string
+  pesosCreados?: Prisma.PesosUncheckedCreateNestedManyWithoutCreadoPorInput
+  pesosModificados?: Prisma.PesosUncheckedCreateNestedManyWithoutModificadoPorInput
 }
 
 export type AgenteCreateOrConnectWithoutLeadsInput = {
@@ -377,12 +475,132 @@ export type AgenteUpdateWithoutLeadsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  pesosCreados?: Prisma.PesosUpdateManyWithoutCreadoPorNestedInput
+  pesosModificados?: Prisma.PesosUpdateManyWithoutModificadoPorNestedInput
 }
 
 export type AgenteUncheckedUpdateWithoutLeadsInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  pesosCreados?: Prisma.PesosUncheckedUpdateManyWithoutCreadoPorNestedInput
+  pesosModificados?: Prisma.PesosUncheckedUpdateManyWithoutModificadoPorNestedInput
+}
+
+export type AgenteCreateWithoutPesosCreadosInput = {
+  id?: bigint | number
+  nombre: string
+  rol: string
+  telefono: string
+  passwordHash: string
+  leads?: Prisma.LeadCreateNestedManyWithoutAgenteInput
+  pesosModificados?: Prisma.PesosCreateNestedManyWithoutModificadoPorInput
+}
+
+export type AgenteUncheckedCreateWithoutPesosCreadosInput = {
+  id?: bigint | number
+  nombre: string
+  rol: string
+  telefono: string
+  passwordHash: string
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutAgenteInput
+  pesosModificados?: Prisma.PesosUncheckedCreateNestedManyWithoutModificadoPorInput
+}
+
+export type AgenteCreateOrConnectWithoutPesosCreadosInput = {
+  where: Prisma.AgenteWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgenteCreateWithoutPesosCreadosInput, Prisma.AgenteUncheckedCreateWithoutPesosCreadosInput>
+}
+
+export type AgenteCreateWithoutPesosModificadosInput = {
+  id?: bigint | number
+  nombre: string
+  rol: string
+  telefono: string
+  passwordHash: string
+  leads?: Prisma.LeadCreateNestedManyWithoutAgenteInput
+  pesosCreados?: Prisma.PesosCreateNestedManyWithoutCreadoPorInput
+}
+
+export type AgenteUncheckedCreateWithoutPesosModificadosInput = {
+  id?: bigint | number
+  nombre: string
+  rol: string
+  telefono: string
+  passwordHash: string
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutAgenteInput
+  pesosCreados?: Prisma.PesosUncheckedCreateNestedManyWithoutCreadoPorInput
+}
+
+export type AgenteCreateOrConnectWithoutPesosModificadosInput = {
+  where: Prisma.AgenteWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgenteCreateWithoutPesosModificadosInput, Prisma.AgenteUncheckedCreateWithoutPesosModificadosInput>
+}
+
+export type AgenteUpsertWithoutPesosCreadosInput = {
+  update: Prisma.XOR<Prisma.AgenteUpdateWithoutPesosCreadosInput, Prisma.AgenteUncheckedUpdateWithoutPesosCreadosInput>
+  create: Prisma.XOR<Prisma.AgenteCreateWithoutPesosCreadosInput, Prisma.AgenteUncheckedCreateWithoutPesosCreadosInput>
+  where?: Prisma.AgenteWhereInput
+}
+
+export type AgenteUpdateToOneWithWhereWithoutPesosCreadosInput = {
+  where?: Prisma.AgenteWhereInput
+  data: Prisma.XOR<Prisma.AgenteUpdateWithoutPesosCreadosInput, Prisma.AgenteUncheckedUpdateWithoutPesosCreadosInput>
+}
+
+export type AgenteUpdateWithoutPesosCreadosInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  leads?: Prisma.LeadUpdateManyWithoutAgenteNestedInput
+  pesosModificados?: Prisma.PesosUpdateManyWithoutModificadoPorNestedInput
+}
+
+export type AgenteUncheckedUpdateWithoutPesosCreadosInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutAgenteNestedInput
+  pesosModificados?: Prisma.PesosUncheckedUpdateManyWithoutModificadoPorNestedInput
+}
+
+export type AgenteUpsertWithoutPesosModificadosInput = {
+  update: Prisma.XOR<Prisma.AgenteUpdateWithoutPesosModificadosInput, Prisma.AgenteUncheckedUpdateWithoutPesosModificadosInput>
+  create: Prisma.XOR<Prisma.AgenteCreateWithoutPesosModificadosInput, Prisma.AgenteUncheckedCreateWithoutPesosModificadosInput>
+  where?: Prisma.AgenteWhereInput
+}
+
+export type AgenteUpdateToOneWithWhereWithoutPesosModificadosInput = {
+  where?: Prisma.AgenteWhereInput
+  data: Prisma.XOR<Prisma.AgenteUpdateWithoutPesosModificadosInput, Prisma.AgenteUncheckedUpdateWithoutPesosModificadosInput>
+}
+
+export type AgenteUpdateWithoutPesosModificadosInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  leads?: Prisma.LeadUpdateManyWithoutAgenteNestedInput
+  pesosCreados?: Prisma.PesosUpdateManyWithoutCreadoPorNestedInput
+}
+
+export type AgenteUncheckedUpdateWithoutPesosModificadosInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  rol?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutAgenteNestedInput
+  pesosCreados?: Prisma.PesosUncheckedUpdateManyWithoutCreadoPorNestedInput
 }
 
 
@@ -392,10 +610,14 @@ export type AgenteUncheckedUpdateWithoutLeadsInput = {
 
 export type AgenteCountOutputType = {
   leads: number
+  pesosCreados: number
+  pesosModificados: number
 }
 
 export type AgenteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | AgenteCountOutputTypeCountLeadsArgs
+  pesosCreados?: boolean | AgenteCountOutputTypeCountPesosCreadosArgs
+  pesosModificados?: boolean | AgenteCountOutputTypeCountPesosModificadosArgs
 }
 
 /**
@@ -415,12 +637,30 @@ export type AgenteCountOutputTypeCountLeadsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.LeadWhereInput
 }
 
+/**
+ * AgenteCountOutputType without action
+ */
+export type AgenteCountOutputTypeCountPesosCreadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PesosWhereInput
+}
+
+/**
+ * AgenteCountOutputType without action
+ */
+export type AgenteCountOutputTypeCountPesosModificadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PesosWhereInput
+}
+
 
 export type AgenteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nombre?: boolean
   rol?: boolean
+  telefono?: boolean
+  passwordHash?: boolean
   leads?: boolean | Prisma.Agente$leadsArgs<ExtArgs>
+  pesosCreados?: boolean | Prisma.Agente$pesosCreadosArgs<ExtArgs>
+  pesosModificados?: boolean | Prisma.Agente$pesosModificadosArgs<ExtArgs>
   _count?: boolean | Prisma.AgenteCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agente"]>
 
@@ -428,23 +668,31 @@ export type AgenteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   nombre?: boolean
   rol?: boolean
+  telefono?: boolean
+  passwordHash?: boolean
 }, ExtArgs["result"]["agente"]>
 
 export type AgenteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nombre?: boolean
   rol?: boolean
+  telefono?: boolean
+  passwordHash?: boolean
 }, ExtArgs["result"]["agente"]>
 
 export type AgenteSelectScalar = {
   id?: boolean
   nombre?: boolean
   rol?: boolean
+  telefono?: boolean
+  passwordHash?: boolean
 }
 
-export type AgenteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "rol", ExtArgs["result"]["agente"]>
+export type AgenteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "rol" | "telefono" | "passwordHash", ExtArgs["result"]["agente"]>
 export type AgenteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | Prisma.Agente$leadsArgs<ExtArgs>
+  pesosCreados?: boolean | Prisma.Agente$pesosCreadosArgs<ExtArgs>
+  pesosModificados?: boolean | Prisma.Agente$pesosModificadosArgs<ExtArgs>
   _count?: boolean | Prisma.AgenteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AgenteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -454,11 +702,15 @@ export type $AgentePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Agente"
   objects: {
     leads: Prisma.$LeadPayload<ExtArgs>[]
+    pesosCreados: Prisma.$PesosPayload<ExtArgs>[]
+    pesosModificados: Prisma.$PesosPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     nombre: string
     rol: string
+    telefono: string
+    passwordHash: string
   }, ExtArgs["result"]["agente"]>
   composites: {}
 }
@@ -854,6 +1106,8 @@ readonly fields: AgenteFieldRefs;
 export interface Prisma__AgenteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   leads<T extends Prisma.Agente$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agente$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pesosCreados<T extends Prisma.Agente$pesosCreadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agente$pesosCreadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PesosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pesosModificados<T extends Prisma.Agente$pesosModificadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agente$pesosModificadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PesosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -886,6 +1140,8 @@ export interface AgenteFieldRefs {
   readonly id: Prisma.FieldRef<"Agente", 'BigInt'>
   readonly nombre: Prisma.FieldRef<"Agente", 'String'>
   readonly rol: Prisma.FieldRef<"Agente", 'String'>
+  readonly telefono: Prisma.FieldRef<"Agente", 'String'>
+  readonly passwordHash: Prisma.FieldRef<"Agente", 'String'>
 }
     
 
@@ -1300,6 +1556,54 @@ export type Agente$leadsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * Agente.pesosCreados
+ */
+export type Agente$pesosCreadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Pesos
+   */
+  select?: Prisma.PesosSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Pesos
+   */
+  omit?: Prisma.PesosOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PesosInclude<ExtArgs> | null
+  where?: Prisma.PesosWhereInput
+  orderBy?: Prisma.PesosOrderByWithRelationInput | Prisma.PesosOrderByWithRelationInput[]
+  cursor?: Prisma.PesosWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PesosScalarFieldEnum | Prisma.PesosScalarFieldEnum[]
+}
+
+/**
+ * Agente.pesosModificados
+ */
+export type Agente$pesosModificadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Pesos
+   */
+  select?: Prisma.PesosSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Pesos
+   */
+  omit?: Prisma.PesosOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PesosInclude<ExtArgs> | null
+  where?: Prisma.PesosWhereInput
+  orderBy?: Prisma.PesosOrderByWithRelationInput | Prisma.PesosOrderByWithRelationInput[]
+  cursor?: Prisma.PesosWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PesosScalarFieldEnum | Prisma.PesosScalarFieldEnum[]
 }
 
 /**

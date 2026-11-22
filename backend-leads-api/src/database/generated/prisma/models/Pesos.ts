@@ -32,6 +32,8 @@ export type PesosAvgAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  creadoPorId: number | null
+  modificadoPorId: number | null
 }
 
 export type PesosSumAggregateOutputType = {
@@ -40,6 +42,8 @@ export type PesosSumAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  creadoPorId: bigint | null
+  modificadoPorId: bigint | null
 }
 
 export type PesosMinAggregateOutputType = {
@@ -49,6 +53,10 @@ export type PesosMinAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  creadoPorId: bigint | null
+  modificadoPorId: bigint | null
 }
 
 export type PesosMaxAggregateOutputType = {
@@ -58,6 +66,10 @@ export type PesosMaxAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  creadoPorId: bigint | null
+  modificadoPorId: bigint | null
 }
 
 export type PesosCountAggregateOutputType = {
@@ -67,6 +79,10 @@ export type PesosCountAggregateOutputType = {
   interesComercial: number
   origen: number
   antiguedad: number
+  createdAt: number
+  updatedAt: number
+  creadoPorId: number
+  modificadoPorId: number
   _all: number
 }
 
@@ -77,6 +93,8 @@ export type PesosAvgAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  creadoPorId?: true
+  modificadoPorId?: true
 }
 
 export type PesosSumAggregateInputType = {
@@ -85,6 +103,8 @@ export type PesosSumAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  creadoPorId?: true
+  modificadoPorId?: true
 }
 
 export type PesosMinAggregateInputType = {
@@ -94,6 +114,10 @@ export type PesosMinAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  createdAt?: true
+  updatedAt?: true
+  creadoPorId?: true
+  modificadoPorId?: true
 }
 
 export type PesosMaxAggregateInputType = {
@@ -103,6 +127,10 @@ export type PesosMaxAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  createdAt?: true
+  updatedAt?: true
+  creadoPorId?: true
+  modificadoPorId?: true
 }
 
 export type PesosCountAggregateInputType = {
@@ -112,6 +140,10 @@ export type PesosCountAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  createdAt?: true
+  updatedAt?: true
+  creadoPorId?: true
+  modificadoPorId?: true
   _all?: true
 }
 
@@ -208,6 +240,10 @@ export type PesosGroupByOutputType = {
   interesComercial: number
   origen: number
   antiguedad: number
+  createdAt: Date
+  updatedAt: Date
+  creadoPorId: bigint | null
+  modificadoPorId: bigint | null
   _count: PesosCountAggregateOutputType | null
   _avg: PesosAvgAggregateOutputType | null
   _sum: PesosSumAggregateOutputType | null
@@ -240,6 +276,12 @@ export type PesosWhereInput = {
   interesComercial?: Prisma.IntFilter<"Pesos"> | number
   origen?: Prisma.IntFilter<"Pesos"> | number
   antiguedad?: Prisma.IntFilter<"Pesos"> | number
+  createdAt?: Prisma.DateTimeFilter<"Pesos"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Pesos"> | Date | string
+  creadoPorId?: Prisma.BigIntNullableFilter<"Pesos"> | bigint | number | null
+  modificadoPorId?: Prisma.BigIntNullableFilter<"Pesos"> | bigint | number | null
+  creadoPor?: Prisma.XOR<Prisma.AgenteNullableScalarRelationFilter, Prisma.AgenteWhereInput> | null
+  modificadoPor?: Prisma.XOR<Prisma.AgenteNullableScalarRelationFilter, Prisma.AgenteWhereInput> | null
   puntuaciones?: Prisma.PuntuacionListRelationFilter
 }
 
@@ -250,6 +292,12 @@ export type PesosOrderByWithRelationInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  creadoPorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  modificadoPorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  creadoPor?: Prisma.AgenteOrderByWithRelationInput
+  modificadoPor?: Prisma.AgenteOrderByWithRelationInput
   puntuaciones?: Prisma.PuntuacionOrderByRelationAggregateInput
 }
 
@@ -263,6 +311,12 @@ export type PesosWhereUniqueInput = Prisma.AtLeast<{
   interesComercial?: Prisma.IntFilter<"Pesos"> | number
   origen?: Prisma.IntFilter<"Pesos"> | number
   antiguedad?: Prisma.IntFilter<"Pesos"> | number
+  createdAt?: Prisma.DateTimeFilter<"Pesos"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Pesos"> | Date | string
+  creadoPorId?: Prisma.BigIntNullableFilter<"Pesos"> | bigint | number | null
+  modificadoPorId?: Prisma.BigIntNullableFilter<"Pesos"> | bigint | number | null
+  creadoPor?: Prisma.XOR<Prisma.AgenteNullableScalarRelationFilter, Prisma.AgenteWhereInput> | null
+  modificadoPor?: Prisma.XOR<Prisma.AgenteNullableScalarRelationFilter, Prisma.AgenteWhereInput> | null
   puntuaciones?: Prisma.PuntuacionListRelationFilter
 }, "version">
 
@@ -273,6 +327,10 @@ export type PesosOrderByWithAggregationInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  creadoPorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  modificadoPorId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PesosCountOrderByAggregateInput
   _avg?: Prisma.PesosAvgOrderByAggregateInput
   _max?: Prisma.PesosMaxOrderByAggregateInput
@@ -290,35 +348,49 @@ export type PesosScalarWhereWithAggregatesInput = {
   interesComercial?: Prisma.IntWithAggregatesFilter<"Pesos"> | number
   origen?: Prisma.IntWithAggregatesFilter<"Pesos"> | number
   antiguedad?: Prisma.IntWithAggregatesFilter<"Pesos"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Pesos"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Pesos"> | Date | string
+  creadoPorId?: Prisma.BigIntNullableWithAggregatesFilter<"Pesos"> | bigint | number | null
+  modificadoPorId?: Prisma.BigIntNullableWithAggregatesFilter<"Pesos"> | bigint | number | null
 }
 
 export type PesosCreateInput = {
-  version: number
   activo?: boolean
   clienteNuevo: number
   interesComercial: number
   origen: number
   antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPor?: Prisma.AgenteCreateNestedOneWithoutPesosCreadosInput
+  modificadoPor?: Prisma.AgenteCreateNestedOneWithoutPesosModificadosInput
   puntuaciones?: Prisma.PuntuacionCreateNestedManyWithoutPesosInput
 }
 
 export type PesosUncheckedCreateInput = {
-  version: number
+  version?: number
   activo?: boolean
   clienteNuevo: number
   interesComercial: number
   origen: number
   antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPorId?: bigint | number | null
+  modificadoPorId?: bigint | number | null
   puntuaciones?: Prisma.PuntuacionUncheckedCreateNestedManyWithoutPesosInput
 }
 
 export type PesosUpdateInput = {
-  version?: Prisma.IntFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPor?: Prisma.AgenteUpdateOneWithoutPesosCreadosNestedInput
+  modificadoPor?: Prisma.AgenteUpdateOneWithoutPesosModificadosNestedInput
   puntuaciones?: Prisma.PuntuacionUpdateManyWithoutPesosNestedInput
 }
 
@@ -329,25 +401,34 @@ export type PesosUncheckedUpdateInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  modificadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   puntuaciones?: Prisma.PuntuacionUncheckedUpdateManyWithoutPesosNestedInput
 }
 
 export type PesosCreateManyInput = {
-  version: number
+  version?: number
   activo?: boolean
   clienteNuevo: number
   interesComercial: number
   origen: number
   antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPorId?: bigint | number | null
+  modificadoPorId?: bigint | number | null
 }
 
 export type PesosUpdateManyMutationInput = {
-  version?: Prisma.IntFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PesosUncheckedUpdateManyInput = {
@@ -357,6 +438,20 @@ export type PesosUncheckedUpdateManyInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  modificadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+}
+
+export type PesosListRelationFilter = {
+  every?: Prisma.PesosWhereInput
+  some?: Prisma.PesosWhereInput
+  none?: Prisma.PesosWhereInput
+}
+
+export type PesosOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type PesosScalarRelationFilter = {
@@ -371,6 +466,10 @@ export type PesosCountOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  creadoPorId?: Prisma.SortOrder
+  modificadoPorId?: Prisma.SortOrder
 }
 
 export type PesosAvgOrderByAggregateInput = {
@@ -379,6 +478,8 @@ export type PesosAvgOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  creadoPorId?: Prisma.SortOrder
+  modificadoPorId?: Prisma.SortOrder
 }
 
 export type PesosMaxOrderByAggregateInput = {
@@ -388,6 +489,10 @@ export type PesosMaxOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  creadoPorId?: Prisma.SortOrder
+  modificadoPorId?: Prisma.SortOrder
 }
 
 export type PesosMinOrderByAggregateInput = {
@@ -397,6 +502,10 @@ export type PesosMinOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  creadoPorId?: Prisma.SortOrder
+  modificadoPorId?: Prisma.SortOrder
 }
 
 export type PesosSumOrderByAggregateInput = {
@@ -405,6 +514,92 @@ export type PesosSumOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  creadoPorId?: Prisma.SortOrder
+  modificadoPorId?: Prisma.SortOrder
+}
+
+export type PesosCreateNestedManyWithoutCreadoPorInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutCreadoPorInput, Prisma.PesosUncheckedCreateWithoutCreadoPorInput> | Prisma.PesosCreateWithoutCreadoPorInput[] | Prisma.PesosUncheckedCreateWithoutCreadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutCreadoPorInput | Prisma.PesosCreateOrConnectWithoutCreadoPorInput[]
+  createMany?: Prisma.PesosCreateManyCreadoPorInputEnvelope
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+}
+
+export type PesosCreateNestedManyWithoutModificadoPorInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutModificadoPorInput, Prisma.PesosUncheckedCreateWithoutModificadoPorInput> | Prisma.PesosCreateWithoutModificadoPorInput[] | Prisma.PesosUncheckedCreateWithoutModificadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutModificadoPorInput | Prisma.PesosCreateOrConnectWithoutModificadoPorInput[]
+  createMany?: Prisma.PesosCreateManyModificadoPorInputEnvelope
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+}
+
+export type PesosUncheckedCreateNestedManyWithoutCreadoPorInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutCreadoPorInput, Prisma.PesosUncheckedCreateWithoutCreadoPorInput> | Prisma.PesosCreateWithoutCreadoPorInput[] | Prisma.PesosUncheckedCreateWithoutCreadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutCreadoPorInput | Prisma.PesosCreateOrConnectWithoutCreadoPorInput[]
+  createMany?: Prisma.PesosCreateManyCreadoPorInputEnvelope
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+}
+
+export type PesosUncheckedCreateNestedManyWithoutModificadoPorInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutModificadoPorInput, Prisma.PesosUncheckedCreateWithoutModificadoPorInput> | Prisma.PesosCreateWithoutModificadoPorInput[] | Prisma.PesosUncheckedCreateWithoutModificadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutModificadoPorInput | Prisma.PesosCreateOrConnectWithoutModificadoPorInput[]
+  createMany?: Prisma.PesosCreateManyModificadoPorInputEnvelope
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+}
+
+export type PesosUpdateManyWithoutCreadoPorNestedInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutCreadoPorInput, Prisma.PesosUncheckedCreateWithoutCreadoPorInput> | Prisma.PesosCreateWithoutCreadoPorInput[] | Prisma.PesosUncheckedCreateWithoutCreadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutCreadoPorInput | Prisma.PesosCreateOrConnectWithoutCreadoPorInput[]
+  upsert?: Prisma.PesosUpsertWithWhereUniqueWithoutCreadoPorInput | Prisma.PesosUpsertWithWhereUniqueWithoutCreadoPorInput[]
+  createMany?: Prisma.PesosCreateManyCreadoPorInputEnvelope
+  set?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  disconnect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  delete?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  update?: Prisma.PesosUpdateWithWhereUniqueWithoutCreadoPorInput | Prisma.PesosUpdateWithWhereUniqueWithoutCreadoPorInput[]
+  updateMany?: Prisma.PesosUpdateManyWithWhereWithoutCreadoPorInput | Prisma.PesosUpdateManyWithWhereWithoutCreadoPorInput[]
+  deleteMany?: Prisma.PesosScalarWhereInput | Prisma.PesosScalarWhereInput[]
+}
+
+export type PesosUpdateManyWithoutModificadoPorNestedInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutModificadoPorInput, Prisma.PesosUncheckedCreateWithoutModificadoPorInput> | Prisma.PesosCreateWithoutModificadoPorInput[] | Prisma.PesosUncheckedCreateWithoutModificadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutModificadoPorInput | Prisma.PesosCreateOrConnectWithoutModificadoPorInput[]
+  upsert?: Prisma.PesosUpsertWithWhereUniqueWithoutModificadoPorInput | Prisma.PesosUpsertWithWhereUniqueWithoutModificadoPorInput[]
+  createMany?: Prisma.PesosCreateManyModificadoPorInputEnvelope
+  set?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  disconnect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  delete?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  update?: Prisma.PesosUpdateWithWhereUniqueWithoutModificadoPorInput | Prisma.PesosUpdateWithWhereUniqueWithoutModificadoPorInput[]
+  updateMany?: Prisma.PesosUpdateManyWithWhereWithoutModificadoPorInput | Prisma.PesosUpdateManyWithWhereWithoutModificadoPorInput[]
+  deleteMany?: Prisma.PesosScalarWhereInput | Prisma.PesosScalarWhereInput[]
+}
+
+export type PesosUncheckedUpdateManyWithoutCreadoPorNestedInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutCreadoPorInput, Prisma.PesosUncheckedCreateWithoutCreadoPorInput> | Prisma.PesosCreateWithoutCreadoPorInput[] | Prisma.PesosUncheckedCreateWithoutCreadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutCreadoPorInput | Prisma.PesosCreateOrConnectWithoutCreadoPorInput[]
+  upsert?: Prisma.PesosUpsertWithWhereUniqueWithoutCreadoPorInput | Prisma.PesosUpsertWithWhereUniqueWithoutCreadoPorInput[]
+  createMany?: Prisma.PesosCreateManyCreadoPorInputEnvelope
+  set?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  disconnect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  delete?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  update?: Prisma.PesosUpdateWithWhereUniqueWithoutCreadoPorInput | Prisma.PesosUpdateWithWhereUniqueWithoutCreadoPorInput[]
+  updateMany?: Prisma.PesosUpdateManyWithWhereWithoutCreadoPorInput | Prisma.PesosUpdateManyWithWhereWithoutCreadoPorInput[]
+  deleteMany?: Prisma.PesosScalarWhereInput | Prisma.PesosScalarWhereInput[]
+}
+
+export type PesosUncheckedUpdateManyWithoutModificadoPorNestedInput = {
+  create?: Prisma.XOR<Prisma.PesosCreateWithoutModificadoPorInput, Prisma.PesosUncheckedCreateWithoutModificadoPorInput> | Prisma.PesosCreateWithoutModificadoPorInput[] | Prisma.PesosUncheckedCreateWithoutModificadoPorInput[]
+  connectOrCreate?: Prisma.PesosCreateOrConnectWithoutModificadoPorInput | Prisma.PesosCreateOrConnectWithoutModificadoPorInput[]
+  upsert?: Prisma.PesosUpsertWithWhereUniqueWithoutModificadoPorInput | Prisma.PesosUpsertWithWhereUniqueWithoutModificadoPorInput[]
+  createMany?: Prisma.PesosCreateManyModificadoPorInputEnvelope
+  set?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  disconnect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  delete?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  connect?: Prisma.PesosWhereUniqueInput | Prisma.PesosWhereUniqueInput[]
+  update?: Prisma.PesosUpdateWithWhereUniqueWithoutModificadoPorInput | Prisma.PesosUpdateWithWhereUniqueWithoutModificadoPorInput[]
+  updateMany?: Prisma.PesosUpdateManyWithWhereWithoutModificadoPorInput | Prisma.PesosUpdateManyWithWhereWithoutModificadoPorInput[]
+  deleteMany?: Prisma.PesosScalarWhereInput | Prisma.PesosScalarWhereInput[]
 }
 
 export type PesosCreateNestedOneWithoutPuntuacionesInput = {
@@ -425,22 +620,147 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type PesosCreateWithoutPuntuacionesInput = {
-  version: number
+export type PesosCreateWithoutCreadoPorInput = {
   activo?: boolean
   clienteNuevo: number
   interesComercial: number
   origen: number
   antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modificadoPor?: Prisma.AgenteCreateNestedOneWithoutPesosModificadosInput
+  puntuaciones?: Prisma.PuntuacionCreateNestedManyWithoutPesosInput
+}
+
+export type PesosUncheckedCreateWithoutCreadoPorInput = {
+  version?: number
+  activo?: boolean
+  clienteNuevo: number
+  interesComercial: number
+  origen: number
+  antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modificadoPorId?: bigint | number | null
+  puntuaciones?: Prisma.PuntuacionUncheckedCreateNestedManyWithoutPesosInput
+}
+
+export type PesosCreateOrConnectWithoutCreadoPorInput = {
+  where: Prisma.PesosWhereUniqueInput
+  create: Prisma.XOR<Prisma.PesosCreateWithoutCreadoPorInput, Prisma.PesosUncheckedCreateWithoutCreadoPorInput>
+}
+
+export type PesosCreateManyCreadoPorInputEnvelope = {
+  data: Prisma.PesosCreateManyCreadoPorInput | Prisma.PesosCreateManyCreadoPorInput[]
+  skipDuplicates?: boolean
+}
+
+export type PesosCreateWithoutModificadoPorInput = {
+  activo?: boolean
+  clienteNuevo: number
+  interesComercial: number
+  origen: number
+  antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPor?: Prisma.AgenteCreateNestedOneWithoutPesosCreadosInput
+  puntuaciones?: Prisma.PuntuacionCreateNestedManyWithoutPesosInput
+}
+
+export type PesosUncheckedCreateWithoutModificadoPorInput = {
+  version?: number
+  activo?: boolean
+  clienteNuevo: number
+  interesComercial: number
+  origen: number
+  antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPorId?: bigint | number | null
+  puntuaciones?: Prisma.PuntuacionUncheckedCreateNestedManyWithoutPesosInput
+}
+
+export type PesosCreateOrConnectWithoutModificadoPorInput = {
+  where: Prisma.PesosWhereUniqueInput
+  create: Prisma.XOR<Prisma.PesosCreateWithoutModificadoPorInput, Prisma.PesosUncheckedCreateWithoutModificadoPorInput>
+}
+
+export type PesosCreateManyModificadoPorInputEnvelope = {
+  data: Prisma.PesosCreateManyModificadoPorInput | Prisma.PesosCreateManyModificadoPorInput[]
+  skipDuplicates?: boolean
+}
+
+export type PesosUpsertWithWhereUniqueWithoutCreadoPorInput = {
+  where: Prisma.PesosWhereUniqueInput
+  update: Prisma.XOR<Prisma.PesosUpdateWithoutCreadoPorInput, Prisma.PesosUncheckedUpdateWithoutCreadoPorInput>
+  create: Prisma.XOR<Prisma.PesosCreateWithoutCreadoPorInput, Prisma.PesosUncheckedCreateWithoutCreadoPorInput>
+}
+
+export type PesosUpdateWithWhereUniqueWithoutCreadoPorInput = {
+  where: Prisma.PesosWhereUniqueInput
+  data: Prisma.XOR<Prisma.PesosUpdateWithoutCreadoPorInput, Prisma.PesosUncheckedUpdateWithoutCreadoPorInput>
+}
+
+export type PesosUpdateManyWithWhereWithoutCreadoPorInput = {
+  where: Prisma.PesosScalarWhereInput
+  data: Prisma.XOR<Prisma.PesosUpdateManyMutationInput, Prisma.PesosUncheckedUpdateManyWithoutCreadoPorInput>
+}
+
+export type PesosScalarWhereInput = {
+  AND?: Prisma.PesosScalarWhereInput | Prisma.PesosScalarWhereInput[]
+  OR?: Prisma.PesosScalarWhereInput[]
+  NOT?: Prisma.PesosScalarWhereInput | Prisma.PesosScalarWhereInput[]
+  version?: Prisma.IntFilter<"Pesos"> | number
+  activo?: Prisma.BoolFilter<"Pesos"> | boolean
+  clienteNuevo?: Prisma.IntFilter<"Pesos"> | number
+  interesComercial?: Prisma.IntFilter<"Pesos"> | number
+  origen?: Prisma.IntFilter<"Pesos"> | number
+  antiguedad?: Prisma.IntFilter<"Pesos"> | number
+  createdAt?: Prisma.DateTimeFilter<"Pesos"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Pesos"> | Date | string
+  creadoPorId?: Prisma.BigIntNullableFilter<"Pesos"> | bigint | number | null
+  modificadoPorId?: Prisma.BigIntNullableFilter<"Pesos"> | bigint | number | null
+}
+
+export type PesosUpsertWithWhereUniqueWithoutModificadoPorInput = {
+  where: Prisma.PesosWhereUniqueInput
+  update: Prisma.XOR<Prisma.PesosUpdateWithoutModificadoPorInput, Prisma.PesosUncheckedUpdateWithoutModificadoPorInput>
+  create: Prisma.XOR<Prisma.PesosCreateWithoutModificadoPorInput, Prisma.PesosUncheckedCreateWithoutModificadoPorInput>
+}
+
+export type PesosUpdateWithWhereUniqueWithoutModificadoPorInput = {
+  where: Prisma.PesosWhereUniqueInput
+  data: Prisma.XOR<Prisma.PesosUpdateWithoutModificadoPorInput, Prisma.PesosUncheckedUpdateWithoutModificadoPorInput>
+}
+
+export type PesosUpdateManyWithWhereWithoutModificadoPorInput = {
+  where: Prisma.PesosScalarWhereInput
+  data: Prisma.XOR<Prisma.PesosUpdateManyMutationInput, Prisma.PesosUncheckedUpdateManyWithoutModificadoPorInput>
+}
+
+export type PesosCreateWithoutPuntuacionesInput = {
+  activo?: boolean
+  clienteNuevo: number
+  interesComercial: number
+  origen: number
+  antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPor?: Prisma.AgenteCreateNestedOneWithoutPesosCreadosInput
+  modificadoPor?: Prisma.AgenteCreateNestedOneWithoutPesosModificadosInput
 }
 
 export type PesosUncheckedCreateWithoutPuntuacionesInput = {
-  version: number
+  version?: number
   activo?: boolean
   clienteNuevo: number
   interesComercial: number
   origen: number
   antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPorId?: bigint | number | null
+  modificadoPorId?: bigint | number | null
 }
 
 export type PesosCreateOrConnectWithoutPuntuacionesInput = {
@@ -460,12 +780,15 @@ export type PesosUpdateToOneWithWhereWithoutPuntuacionesInput = {
 }
 
 export type PesosUpdateWithoutPuntuacionesInput = {
-  version?: Prisma.IntFieldUpdateOperationsInput | number
   activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPor?: Prisma.AgenteUpdateOneWithoutPesosCreadosNestedInput
+  modificadoPor?: Prisma.AgenteUpdateOneWithoutPesosModificadosNestedInput
 }
 
 export type PesosUncheckedUpdateWithoutPuntuacionesInput = {
@@ -475,6 +798,108 @@ export type PesosUncheckedUpdateWithoutPuntuacionesInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  modificadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+}
+
+export type PesosCreateManyCreadoPorInput = {
+  version?: number
+  activo?: boolean
+  clienteNuevo: number
+  interesComercial: number
+  origen: number
+  antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modificadoPorId?: bigint | number | null
+}
+
+export type PesosCreateManyModificadoPorInput = {
+  version?: number
+  activo?: boolean
+  clienteNuevo: number
+  interesComercial: number
+  origen: number
+  antiguedad: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creadoPorId?: bigint | number | null
+}
+
+export type PesosUpdateWithoutCreadoPorInput = {
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
+  interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
+  origen?: Prisma.IntFieldUpdateOperationsInput | number
+  antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modificadoPor?: Prisma.AgenteUpdateOneWithoutPesosModificadosNestedInput
+  puntuaciones?: Prisma.PuntuacionUpdateManyWithoutPesosNestedInput
+}
+
+export type PesosUncheckedUpdateWithoutCreadoPorInput = {
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
+  interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
+  origen?: Prisma.IntFieldUpdateOperationsInput | number
+  antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modificadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  puntuaciones?: Prisma.PuntuacionUncheckedUpdateManyWithoutPesosNestedInput
+}
+
+export type PesosUncheckedUpdateManyWithoutCreadoPorInput = {
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
+  interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
+  origen?: Prisma.IntFieldUpdateOperationsInput | number
+  antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modificadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+}
+
+export type PesosUpdateWithoutModificadoPorInput = {
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
+  interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
+  origen?: Prisma.IntFieldUpdateOperationsInput | number
+  antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPor?: Prisma.AgenteUpdateOneWithoutPesosCreadosNestedInput
+  puntuaciones?: Prisma.PuntuacionUpdateManyWithoutPesosNestedInput
+}
+
+export type PesosUncheckedUpdateWithoutModificadoPorInput = {
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
+  interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
+  origen?: Prisma.IntFieldUpdateOperationsInput | number
+  antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  puntuaciones?: Prisma.PuntuacionUncheckedUpdateManyWithoutPesosNestedInput
+}
+
+export type PesosUncheckedUpdateManyWithoutModificadoPorInput = {
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  clienteNuevo?: Prisma.IntFieldUpdateOperationsInput | number
+  interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
+  origen?: Prisma.IntFieldUpdateOperationsInput | number
+  antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creadoPorId?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
 }
 
 
@@ -515,6 +940,12 @@ export type PesosSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  creadoPorId?: boolean
+  modificadoPorId?: boolean
+  creadoPor?: boolean | Prisma.Pesos$creadoPorArgs<ExtArgs>
+  modificadoPor?: boolean | Prisma.Pesos$modificadoPorArgs<ExtArgs>
   puntuaciones?: boolean | Prisma.Pesos$puntuacionesArgs<ExtArgs>
   _count?: boolean | Prisma.PesosCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pesos"]>
@@ -526,6 +957,12 @@ export type PesosSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  creadoPorId?: boolean
+  modificadoPorId?: boolean
+  creadoPor?: boolean | Prisma.Pesos$creadoPorArgs<ExtArgs>
+  modificadoPor?: boolean | Prisma.Pesos$modificadoPorArgs<ExtArgs>
 }, ExtArgs["result"]["pesos"]>
 
 export type PesosSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -535,6 +972,12 @@ export type PesosSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  creadoPorId?: boolean
+  modificadoPorId?: boolean
+  creadoPor?: boolean | Prisma.Pesos$creadoPorArgs<ExtArgs>
+  modificadoPor?: boolean | Prisma.Pesos$modificadoPorArgs<ExtArgs>
 }, ExtArgs["result"]["pesos"]>
 
 export type PesosSelectScalar = {
@@ -544,19 +987,33 @@ export type PesosSelectScalar = {
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  creadoPorId?: boolean
+  modificadoPorId?: boolean
 }
 
-export type PesosOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"version" | "activo" | "clienteNuevo" | "interesComercial" | "origen" | "antiguedad", ExtArgs["result"]["pesos"]>
+export type PesosOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"version" | "activo" | "clienteNuevo" | "interesComercial" | "origen" | "antiguedad" | "createdAt" | "updatedAt" | "creadoPorId" | "modificadoPorId", ExtArgs["result"]["pesos"]>
 export type PesosInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  creadoPor?: boolean | Prisma.Pesos$creadoPorArgs<ExtArgs>
+  modificadoPor?: boolean | Prisma.Pesos$modificadoPorArgs<ExtArgs>
   puntuaciones?: boolean | Prisma.Pesos$puntuacionesArgs<ExtArgs>
   _count?: boolean | Prisma.PesosCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type PesosIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type PesosIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PesosIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  creadoPor?: boolean | Prisma.Pesos$creadoPorArgs<ExtArgs>
+  modificadoPor?: boolean | Prisma.Pesos$modificadoPorArgs<ExtArgs>
+}
+export type PesosIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  creadoPor?: boolean | Prisma.Pesos$creadoPorArgs<ExtArgs>
+  modificadoPor?: boolean | Prisma.Pesos$modificadoPorArgs<ExtArgs>
+}
 
 export type $PesosPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Pesos"
   objects: {
+    creadoPor: Prisma.$AgentePayload<ExtArgs> | null
+    modificadoPor: Prisma.$AgentePayload<ExtArgs> | null
     puntuaciones: Prisma.$PuntuacionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -566,6 +1023,10 @@ export type $PesosPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     interesComercial: number
     origen: number
     antiguedad: number
+    createdAt: Date
+    updatedAt: Date
+    creadoPorId: bigint | null
+    modificadoPorId: bigint | null
   }, ExtArgs["result"]["pesos"]>
   composites: {}
 }
@@ -960,6 +1421,8 @@ readonly fields: PesosFieldRefs;
  */
 export interface Prisma__PesosClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  creadoPor<T extends Prisma.Pesos$creadoPorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Pesos$creadoPorArgs<ExtArgs>>): Prisma.Prisma__AgenteClient<runtime.Types.Result.GetResult<Prisma.$AgentePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  modificadoPor<T extends Prisma.Pesos$modificadoPorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Pesos$modificadoPorArgs<ExtArgs>>): Prisma.Prisma__AgenteClient<runtime.Types.Result.GetResult<Prisma.$AgentePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   puntuaciones<T extends Prisma.Pesos$puntuacionesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Pesos$puntuacionesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PuntuacionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -996,6 +1459,10 @@ export interface PesosFieldRefs {
   readonly interesComercial: Prisma.FieldRef<"Pesos", 'Int'>
   readonly origen: Prisma.FieldRef<"Pesos", 'Int'>
   readonly antiguedad: Prisma.FieldRef<"Pesos", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Pesos", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Pesos", 'DateTime'>
+  readonly creadoPorId: Prisma.FieldRef<"Pesos", 'BigInt'>
+  readonly modificadoPorId: Prisma.FieldRef<"Pesos", 'BigInt'>
 }
     
 
@@ -1250,6 +1717,10 @@ export type PesosCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    */
   data: Prisma.PesosCreateManyInput | Prisma.PesosCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PesosIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1320,6 +1791,10 @@ export type PesosUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many Pesos to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PesosIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1386,6 +1861,44 @@ export type PesosDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Pesos to delete.
    */
   limit?: number
+}
+
+/**
+ * Pesos.creadoPor
+ */
+export type Pesos$creadoPorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Agente
+   */
+  select?: Prisma.AgenteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Agente
+   */
+  omit?: Prisma.AgenteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgenteInclude<ExtArgs> | null
+  where?: Prisma.AgenteWhereInput
+}
+
+/**
+ * Pesos.modificadoPor
+ */
+export type Pesos$modificadoPorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Agente
+   */
+  select?: Prisma.AgenteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Agente
+   */
+  omit?: Prisma.AgenteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgenteInclude<ExtArgs> | null
+  where?: Prisma.AgenteWhereInput
 }
 
 /**

@@ -9,11 +9,15 @@ datasource db {
 
 
 model Agente {
-  id     BigInt @id @default(autoincrement())
-  nombre String @db.VarChar(100)
-  rol    String @db.VarChar(50)
+  id           BigInt @id @default(autoincrement())
+  nombre       String @db.VarChar(100)
+  rol          String @db.VarChar(50)
+  telefono     String @unique @db.VarChar(30)
+  passwordHash String @map("password_hash") @db.VarChar(255)
 
   leads  Lead[]
+  pesosCreados     Pesos[] @relation("PesosCreadoPor")
+  pesosModificados Pesos[] @relation("PesosModificadoPor")
 }
 
 model Lead {
@@ -27,8 +31,14 @@ model Lead {
   interesComercial  Int     @map("interes_comercial")
   origen            Int
   antiguedad        Int
+  version           Int      @default(1)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
 
   puntuaciones Puntuacion[]
+
+  @@index([estado])
+  @@index([agenteId])
 }
 
 model Puntuacion {
@@ -41,15 +51,22 @@ model Puntuacion {
   pesos      Pesos   @relation(fields: [version], references: [version])
 
   @@id([leadId, version])
+  @@index([version, puntuacion(sort: Desc), leadId])
 }
 
 model Pesos {
-  version           Int     @id
+  version           Int     @id @default(autoincrement())
   activo            Boolean @default(false)
   clienteNuevo      Int     @map("cliente_nuevo")
   interesComercial  Int     @map("interes_comercial")
   origen            Int
   antiguedad        Int
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
+  creadoPorId       BigInt?  @map("creado_por_id")
+  creadoPor         Agente?  @relation("PesosCreadoPor", fields: [creadoPorId], references: [id])
+  modificadoPorId   BigInt?  @map("modificado_por_id")
+  modificadoPor     Agente?  @relation("PesosModificadoPor", fields: [modificadoPorId], references: [id])
 
   puntuaciones      Puntuacion[]
 }

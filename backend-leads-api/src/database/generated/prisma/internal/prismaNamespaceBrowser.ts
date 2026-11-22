@@ -76,7 +76,9 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const AgenteScalarFieldEnum = {
   id: 'id',
   nombre: 'nombre',
-  rol: 'rol'
+  rol: 'rol',
+  telefono: 'telefono',
+  passwordHash: 'passwordHash'
 } as const
 
 export type AgenteScalarFieldEnum = (typeof AgenteScalarFieldEnum)[keyof typeof AgenteScalarFieldEnum]
@@ -91,7 +93,10 @@ export const LeadScalarFieldEnum = {
   clienteNuevo: 'clienteNuevo',
   interesComercial: 'interesComercial',
   origen: 'origen',
-  antiguedad: 'antiguedad'
+  antiguedad: 'antiguedad',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
@@ -112,7 +117,11 @@ export const PesosScalarFieldEnum = {
   clienteNuevo: 'clienteNuevo',
   interesComercial: 'interesComercial',
   origen: 'origen',
-  antiguedad: 'antiguedad'
+  antiguedad: 'antiguedad',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  creadoPorId: 'creadoPorId',
+  modificadoPorId: 'modificadoPorId'
 } as const
 
 export type PesosScalarFieldEnum = (typeof PesosScalarFieldEnum)[keyof typeof PesosScalarFieldEnum]

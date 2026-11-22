@@ -33,6 +33,7 @@ export type LeadAvgAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  version: number | null
 }
 
 export type LeadSumAggregateOutputType = {
@@ -42,6 +43,7 @@ export type LeadSumAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  version: number | null
 }
 
 export type LeadMinAggregateOutputType = {
@@ -54,6 +56,9 @@ export type LeadMinAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  version: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type LeadMaxAggregateOutputType = {
@@ -66,6 +71,9 @@ export type LeadMaxAggregateOutputType = {
   interesComercial: number | null
   origen: number | null
   antiguedad: number | null
+  version: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type LeadCountAggregateOutputType = {
@@ -78,6 +86,9 @@ export type LeadCountAggregateOutputType = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -89,6 +100,7 @@ export type LeadAvgAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  version?: true
 }
 
 export type LeadSumAggregateInputType = {
@@ -98,6 +110,7 @@ export type LeadSumAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  version?: true
 }
 
 export type LeadMinAggregateInputType = {
@@ -110,6 +123,9 @@ export type LeadMinAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  version?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type LeadMaxAggregateInputType = {
@@ -122,6 +138,9 @@ export type LeadMaxAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  version?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type LeadCountAggregateInputType = {
@@ -134,6 +153,9 @@ export type LeadCountAggregateInputType = {
   interesComercial?: true
   origen?: true
   antiguedad?: true
+  version?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -233,6 +255,9 @@ export type LeadGroupByOutputType = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version: number
+  createdAt: Date
+  updatedAt: Date
   _count: LeadCountAggregateOutputType | null
   _avg: LeadAvgAggregateOutputType | null
   _sum: LeadSumAggregateOutputType | null
@@ -268,6 +293,9 @@ export type LeadWhereInput = {
   interesComercial?: Prisma.IntFilter<"Lead"> | number
   origen?: Prisma.IntFilter<"Lead"> | number
   antiguedad?: Prisma.IntFilter<"Lead"> | number
+  version?: Prisma.IntFilter<"Lead"> | number
+  createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   agente?: Prisma.XOR<Prisma.AgenteNullableScalarRelationFilter, Prisma.AgenteWhereInput> | null
   puntuaciones?: Prisma.PuntuacionListRelationFilter
 }
@@ -282,6 +310,9 @@ export type LeadOrderByWithRelationInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   agente?: Prisma.AgenteOrderByWithRelationInput
   puntuaciones?: Prisma.PuntuacionOrderByRelationAggregateInput
 }
@@ -299,6 +330,9 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   interesComercial?: Prisma.IntFilter<"Lead"> | number
   origen?: Prisma.IntFilter<"Lead"> | number
   antiguedad?: Prisma.IntFilter<"Lead"> | number
+  version?: Prisma.IntFilter<"Lead"> | number
+  createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   agente?: Prisma.XOR<Prisma.AgenteNullableScalarRelationFilter, Prisma.AgenteWhereInput> | null
   puntuaciones?: Prisma.PuntuacionListRelationFilter
 }, "id">
@@ -313,6 +347,9 @@ export type LeadOrderByWithAggregationInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.LeadCountOrderByAggregateInput
   _avg?: Prisma.LeadAvgOrderByAggregateInput
   _max?: Prisma.LeadMaxOrderByAggregateInput
@@ -333,6 +370,9 @@ export type LeadScalarWhereWithAggregatesInput = {
   interesComercial?: Prisma.IntWithAggregatesFilter<"Lead"> | number
   origen?: Prisma.IntWithAggregatesFilter<"Lead"> | number
   antiguedad?: Prisma.IntWithAggregatesFilter<"Lead"> | number
+  version?: Prisma.IntWithAggregatesFilter<"Lead"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
 }
 
 export type LeadCreateInput = {
@@ -344,6 +384,9 @@ export type LeadCreateInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agente?: Prisma.AgenteCreateNestedOneWithoutLeadsInput
   puntuaciones?: Prisma.PuntuacionCreateNestedManyWithoutLeadInput
 }
@@ -358,6 +401,9 @@ export type LeadUncheckedCreateInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   puntuaciones?: Prisma.PuntuacionUncheckedCreateNestedManyWithoutLeadInput
 }
 
@@ -370,6 +416,9 @@ export type LeadUpdateInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agente?: Prisma.AgenteUpdateOneWithoutLeadsNestedInput
   puntuaciones?: Prisma.PuntuacionUpdateManyWithoutLeadNestedInput
 }
@@ -384,6 +433,9 @@ export type LeadUncheckedUpdateInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   puntuaciones?: Prisma.PuntuacionUncheckedUpdateManyWithoutLeadNestedInput
 }
 
@@ -397,6 +449,9 @@ export type LeadCreateManyInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LeadUpdateManyMutationInput = {
@@ -408,6 +463,9 @@ export type LeadUpdateManyMutationInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LeadUncheckedUpdateManyInput = {
@@ -420,6 +478,9 @@ export type LeadUncheckedUpdateManyInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LeadListRelationFilter = {
@@ -442,6 +503,9 @@ export type LeadCountOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LeadAvgOrderByAggregateInput = {
@@ -451,6 +515,7 @@ export type LeadAvgOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type LeadMaxOrderByAggregateInput = {
@@ -463,6 +528,9 @@ export type LeadMaxOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LeadMinOrderByAggregateInput = {
@@ -475,6 +543,9 @@ export type LeadMinOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LeadSumOrderByAggregateInput = {
@@ -484,6 +555,7 @@ export type LeadSumOrderByAggregateInput = {
   interesComercial?: Prisma.SortOrder
   origen?: Prisma.SortOrder
   antiguedad?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type LeadScalarRelationFilter = {
@@ -541,6 +613,10 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
 export type NullableBigIntFieldUpdateOperationsInput = {
   set?: bigint | number | null
   increment?: bigint | number
@@ -572,6 +648,9 @@ export type LeadCreateWithoutAgenteInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   puntuaciones?: Prisma.PuntuacionCreateNestedManyWithoutLeadInput
 }
 
@@ -584,6 +663,9 @@ export type LeadUncheckedCreateWithoutAgenteInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   puntuaciones?: Prisma.PuntuacionUncheckedCreateNestedManyWithoutLeadInput
 }
 
@@ -626,6 +708,9 @@ export type LeadScalarWhereInput = {
   interesComercial?: Prisma.IntFilter<"Lead"> | number
   origen?: Prisma.IntFilter<"Lead"> | number
   antiguedad?: Prisma.IntFilter<"Lead"> | number
+  version?: Prisma.IntFilter<"Lead"> | number
+  createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
 }
 
 export type LeadCreateWithoutPuntuacionesInput = {
@@ -637,6 +722,9 @@ export type LeadCreateWithoutPuntuacionesInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agente?: Prisma.AgenteCreateNestedOneWithoutLeadsInput
 }
 
@@ -650,6 +738,9 @@ export type LeadUncheckedCreateWithoutPuntuacionesInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LeadCreateOrConnectWithoutPuntuacionesInput = {
@@ -677,6 +768,9 @@ export type LeadUpdateWithoutPuntuacionesInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agente?: Prisma.AgenteUpdateOneWithoutLeadsNestedInput
 }
 
@@ -690,6 +784,9 @@ export type LeadUncheckedUpdateWithoutPuntuacionesInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LeadCreateManyAgenteInput = {
@@ -701,6 +798,9 @@ export type LeadCreateManyAgenteInput = {
   interesComercial: number
   origen: number
   antiguedad: number
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LeadUpdateWithoutAgenteInput = {
@@ -712,6 +812,9 @@ export type LeadUpdateWithoutAgenteInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   puntuaciones?: Prisma.PuntuacionUpdateManyWithoutLeadNestedInput
 }
 
@@ -724,6 +827,9 @@ export type LeadUncheckedUpdateWithoutAgenteInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   puntuaciones?: Prisma.PuntuacionUncheckedUpdateManyWithoutLeadNestedInput
 }
 
@@ -736,6 +842,9 @@ export type LeadUncheckedUpdateManyWithoutAgenteInput = {
   interesComercial?: Prisma.IntFieldUpdateOperationsInput | number
   origen?: Prisma.IntFieldUpdateOperationsInput | number
   antiguedad?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -779,6 +888,9 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  version?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   agente?: boolean | Prisma.Lead$agenteArgs<ExtArgs>
   puntuaciones?: boolean | Prisma.Lead$puntuacionesArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
@@ -794,6 +906,9 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  version?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   agente?: boolean | Prisma.Lead$agenteArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -807,6 +922,9 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  version?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   agente?: boolean | Prisma.Lead$agenteArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -820,9 +938,12 @@ export type LeadSelectScalar = {
   interesComercial?: boolean
   origen?: boolean
   antiguedad?: boolean
+  version?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "telefono" | "estado" | "agenteId" | "clienteNuevo" | "interesComercial" | "origen" | "antiguedad", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "telefono" | "estado" | "agenteId" | "clienteNuevo" | "interesComercial" | "origen" | "antiguedad" | "version" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agente?: boolean | Prisma.Lead$agenteArgs<ExtArgs>
   puntuaciones?: boolean | Prisma.Lead$puntuacionesArgs<ExtArgs>
@@ -851,6 +972,9 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     interesComercial: number
     origen: number
     antiguedad: number
+    version: number
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["lead"]>
   composites: {}
 }
@@ -1285,6 +1409,9 @@ export interface LeadFieldRefs {
   readonly interesComercial: Prisma.FieldRef<"Lead", 'Int'>
   readonly origen: Prisma.FieldRef<"Lead", 'Int'>
   readonly antiguedad: Prisma.FieldRef<"Lead", 'Int'>
+  readonly version: Prisma.FieldRef<"Lead", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Lead", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Lead", 'DateTime'>
 }
     
 
