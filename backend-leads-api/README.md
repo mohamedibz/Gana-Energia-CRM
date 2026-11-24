@@ -453,4 +453,4 @@ test/         pruebas de integración
 - **Usuarios de demo:** sus contraseñas están publicadas en este README; en un entorno real habría que cambiarlas.
 - **Indicadores introducidos a mano:** una mejora sería derivarlos de datos de negocio (por ejemplo, la antigüedad a partir de la fecha de alta).
 - **Pruebas e2e:** comparten la base de datos de desarrollo; lo ideal sería una base de datos de pruebas aparte.
-- **La API no está en Docker:** solo la base de datos. Containerizar la API sería el siguiente paso para un despliegue.
+- **Despliegue:** el `docker-compose.yml` de la raíz sirve para desarrollo y demos. Para producción faltaría gestionar los secretos fuera del repositorio, poner HTTPS delante y ejecutar las migraciones como un paso aparte del despliegue.

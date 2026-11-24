@@ -48,6 +48,28 @@ Abre <http://localhost:5173> y entra con un usuario de demo:
 | `600000002` | `Agente2-2026` | Agente |
 | `600000003` | `Agente3-2026` | Agente |
 
+## Cómo encaja todo
+
+```
+navegador ──► web (nginx, :5173) ──► api (NestJS, :3000) ──► db (PostgreSQL, :5432)
+              React + Vite            Prisma, JWT, Zod         volumen leads-db
+```
+
+- La interfaz solo pinta datos: la puntuación y las reglas de negocio viven en la API, y la API es la que decide quién puede hacer qué.
+- La puntuación de cada lead se guarda ya calculada para la versión de pesos activa. Al cambiar los pesos se recalcula todo en una sola transacción, de modo que el listado se ordena y pagina sin calcular nada en cada consulta.
+- Las asignaciones y las ediciones concurrentes se resuelven en la base de datos (actualización condicional y bloqueo optimista con `version`), no en la aplicación.
+
+Los detalles están en cada README: la [arquitectura y el modelo de datos](backend-leads-api/README.md#9-arquitectura-y-modelo-de-datos), el [sistema de pesos](backend-leads-api/README.md#10-sistema-de-pesos-y-puntuación), la [concurrencia](backend-leads-api/README.md#11-concurrencia-y-consistencia) y las [decisiones del frontend](frontend-leads-app/README.md#decisiones-de-diseño).
+
+## Estructura del repositorio
+
+```
+backend-leads-api/    API REST, migraciones, seed y colección de Postman
+frontend-leads-app/   aplicación web
+docker-compose.yml    base de datos, API y web
+.env.example          variables para Docker Compose
+```
+
 ## Pruebas
 
 ```bash
